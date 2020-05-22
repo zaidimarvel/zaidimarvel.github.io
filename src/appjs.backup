@@ -1,0 +1,44 @@
+import * as SRD from "storm-react-diagrams";
+import {HotspotNodeFactory} from "./Custom/Factories/HotspotNodeFactory";
+// import {SceneNodeFactory} from "./Custom/Factories/SceneNodeFactory";
+import {JsonNodeFactory} from "./Custom/Factories/JsonNodeFactory";
+import {ProjectNodeFactory} from "./Custom/Factories/ProjectNodeFactory";
+import {SceneHotspotNodeFactory} from "./Custom/Factories/SceneHotspotNodeFactory";
+import {FileNodeFactory} from "./Custom/Factories/FileNodeFactory";
+import {StartNodeFactory} from "./Custom/Factories/StartNodeFactory";
+import {NextPortFactory} from "./Custom/Factories/NextPortFactory";
+import {StartPortFactory} from "./Custom/Factories/StartPortFactory";
+import {FilePortFactory} from "./Custom/Factories/FilePortFactory";
+
+export class Application {
+    constructor() {
+        this.diagramEngine = new SRD.DiagramEngine();
+        this.diagramEngine.installDefaultFactories();
+        this.diagramEngine.registerPortFactory(new NextPortFactory());
+        this.diagramEngine.registerPortFactory(new StartPortFactory());
+        this.diagramEngine.registerNodeFactory(new HotspotNodeFactory());
+        this.diagramEngine.registerNodeFactory(new JsonNodeFactory());
+        this.diagramEngine.registerNodeFactory(new ProjectNodeFactory());
+        this.diagramEngine.registerNodeFactory(new SceneHotspotNodeFactory());
+        this.diagramEngine.registerNodeFactory(new FileNodeFactory());
+        // this.diagramEngine.registerNodeFactory(new StartNodeFactory());
+        this.diagramEngine.registerNodeFactory(new FilePortFactory());
+
+        this.newModel();
+    }
+    newModel() {
+        this.activeModel = new SRD.DiagramModel();
+        this.diagramEngine.setDiagramModel(this.activeModel);
+        //initial map model
+        // let node1 = new ProjectNodeModel();
+        // node1.setPosition(80,80);
+        // this.activeModel.addAll(node1);
+    }
+    getActiveDiagram() {
+        return this.activeModel;
+    }
+
+    getDiagramEngine() {
+        return this.diagramEngine;
+    }
+}

@@ -1,0 +1,99 @@
+
+.texttocolumn-node {
+    width: 4rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    height: 4rem;
+    color: #f2f2f2;
+    vertical-align: middle;
+    background: linear-gradient(#bbb, #777);
+  }
+  .texttocolumn-node .srd-port {
+    border: 5px solid #7b4397;
+    /* background-color: #42ad6d; */
+    background: #FFEB3B;
+    top: 34%;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+  }
+  .texttocolumn-node .srd-port.top {
+    top: 20%;
+  }
+  
+  .texttocolumn-node .srd-port.bottom {
+    top: 60%;
+  }
+  
+  .texttocolumn-node .right-port .srd-port {
+    right: -15px;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  .texttocolumn-node .left-port .srd-port {
+    left: -15px;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+  .texttocolumn-node .left-port {
+    float: left;
+    width: 15%;
+  }
+  .texttocolumn-node .scene {
+    float: left;
+    width: 70%;
+    height: 4rem;
+    padding-top: 26%;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .texttocolumn-node .right-port {
+    float: left;
+    width: 15%;
+  }
+  
+  
+  .node.srd-node > .texttocolumn-node {
+    border-color: #7b4397;
+    border-radius: 20%;
+    background: #7b4397;
+  }
+  .node.srd-node > .texttocolumn-node .label--desc {
+    position: absolute;
+    top: 7em;
+    left: -1em;
+    display: none;
+    background: #f2f2f2;
+    color: #666;
+    padding: 1px;
+    border-radius: 10px;
+    width: 8em;
+    text-align: center;
+  }
+  .node.srd-node--selected > .texttocolumn-node .label--desc {
+    position: absolute;
+    top: 7em;
+    left: -1em;
+    display: block;
+    background: #f2f2f2;
+    color: #666;
+    padding: 1px;
+    border-radius: 10px;
+    width: 8em;
+    text-align: center;
+  }
+  .node.srd-node--selected > .texttocolumn-node .right-port .srd-port {
+    border-color: #dc2430;
+  }
+  .node.srd-node--selected > .texttocolumn-node .left-port .srd-port {
+    border-color: #7b4397 ;
+  }
+  
+  .node.srd-node--selected > .texttocolumn-node {
+    border-color: transparent;
+    border: none;
+    border-radius: 20%;
+    background: linear-gradient(to right, #7b4397 , #dc2430);
+    -webkit-filter: drop-shadow(0 0 20px rgba(56, 190, 239, 0.632));
+  }
+  

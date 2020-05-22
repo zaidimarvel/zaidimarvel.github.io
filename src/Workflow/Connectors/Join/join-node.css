@@ -1,0 +1,109 @@
+
+.join-node {
+    width: 4rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    height: 4rem;
+    color: #f2f2f2;
+    vertical-align: middle;
+    background: linear-gradient(#bbb, #777);
+  }
+  .join-node .srd-port {
+    border: 5px solid #de6262;
+    /* background-color: #42ad6d; */
+    background: rgb(255, 254, 254);
+    top: 34%;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+  }
+  .join-node .srd-port.left {
+    top: 10%;
+  }
+  
+  .join-node .srd-port.right {
+    top: 61%;
+  }
+
+  .join-node .srd-port.ljoin {
+    top: 5%;
+  }
+  
+  .join-node .srd-port.rjoin {
+    top: 63%;
+  }
+
+  
+  .join-node .right-port .srd-port {
+    right: -15px;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  .join-node .left-port .srd-port {
+    left: -15px;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+  .join-node .left-port {
+    float: left;
+    width: 15%;
+  }
+  .join-node .scene {
+    float: left;
+    width: 70%;
+    height: 4rem;
+    padding-top: 26%;
+    /* padding-left: 18px; */
+    text-align: center;
+    vertical-align: middle;
+  }
+  .join-node .right-port {
+    float: left;
+    width: 15%;
+  }
+  
+  
+  .node.srd-node > .join-node {
+    border-color: #de6262;
+    border-radius: 20%;
+    background: #de6262;
+  }
+  .node.srd-node > .join-node .label--desc {
+    position: absolute;
+    top: 7em;
+    left: -1em;
+    display: none;
+    background: #f2f2f2;
+    color: #666;
+    padding: 1px;
+    border-radius: 10px;
+    width: 8em;
+    text-align: center;
+  }
+  .node.srd-node--selected > .join-node .label--desc {
+    position: absolute;
+    top: 7em;
+    left: -1em;
+    display: block;
+    background: #f2f2f2;
+    color: #666;
+    padding: 1px;
+    border-radius: 10px;
+    width: 8em;
+    text-align: center;
+  }
+  .node.srd-node--selected > .join-node .right-port .srd-port {
+    border-color: #ffb88c;
+  }
+  .node.srd-node--selected > .join-node .left-port .srd-port {
+    border-color: #de6262;
+  }
+  
+  .node.srd-node--selected > .join-node {
+    border-color: transparent;
+    border: none;
+    border-radius: 20%;
+    background: linear-gradient(to right, #de6262, #ffb88c);
+    -webkit-join: drop-shadow(0 0 20px rgba(56, 190, 239, 0.632));
+  }
+  
