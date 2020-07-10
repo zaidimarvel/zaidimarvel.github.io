@@ -1,4 +1,4 @@
-const workflowData =[
+const workflowData1 =[
   {
     "nodeType": "Start",
     "id": "genesis",
@@ -4642,7 +4642,7 @@ const workflowData =[
   }
 ]
 
-const links = {
+const workflowData = {
   "links": [
     {
       "stamp": "2de0a8a8-06f6-4924-b9ab-793613865f8ec7b27769-bc7d-496e-aeeb-b8eb53a82aef",

@@ -16,11 +16,11 @@ export class PeekNodeModel extends NodeModel {
     }
    
     addOutPort(label) {
-        return this.addPort(new DefaultPortModel(false, Toolkit.UID(), label));
+        return this.addPort(new DefaultPortModel(false, label, label));
     }
     addInPort(label) {
          
-        return this.addPort(new DefaultPortModel(true, Toolkit.UID(), label));
+        return this.addPort(new DefaultPortModel(true, label, label));
     }
     printResults(node, port){
 

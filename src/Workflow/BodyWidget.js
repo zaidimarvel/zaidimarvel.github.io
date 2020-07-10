@@ -11,6 +11,7 @@ import {
   DefaultNodeModel,
   DiagramModel,
   DiagramWidget,
+  Toolkit,
 } from "storm-react-diagrams";
 import { FileNodeModel } from "./Connectors/FileInput/FileNodeModel";
 import { FilterNodeModel } from "./Connectors/Filter/FilterNodeModel";
@@ -69,6 +70,7 @@ export class BodyWidget extends React.Component {
       activeTab: "1",
     };
     this.updateNode = this.updateNode.bind(this);
+    this.renderLinks = this.renderLinks.bind(this);
     this.renderNode = this.renderNode.bind(this);
     this.handleChangeSelectedSheet = this.handleChangeSelectedSheet.bind(this);
     this.handleChangeStartIndex = this.handleChangeStartIndex.bind(this);
@@ -92,15 +94,13 @@ export class BodyWidget extends React.Component {
   componentWillMount() {
     let that = this;
     this.model = new DiagramModel();
+
     this.setState({
       nodes: [],
       connections: [],
       display_results: [],
     });
 
-    //  this.engine.installDefaultFactories();
-
-    console.log(workflowData);
 
     this.model.addListener({
       nodesUpdated: function (e) {
@@ -203,6 +203,7 @@ export class BodyWidget extends React.Component {
                   });
                 }
               } else {
+                console.log("Dont resort to here");
                 event.link.remove();
               }
             }
@@ -212,6 +213,8 @@ export class BodyWidget extends React.Component {
             // e.remove()
           },
           entityRemoved: function (d) {
+            console.log(d.entity);
+
             let data = that.state.connections.filter(
               (link) => link.link_id != d.entity.id
             );
@@ -229,19 +232,71 @@ export class BodyWidget extends React.Component {
     });
 
     this.props.app.diagramEngine.setDiagramModel(this.model);
+
+
   }
   componentDidMount() {
-    workflowData.forEach((node) => {
-      // console.log(node);
-      this.renderNode(node);
-    });
-    console.log("here here");
+
+    let that = this
+
+    Axios.get("http://127.0.0.1:5000/get-workflow?_id=93232fb5-7fd7-4952-8fff-ec1c051e2997")
+        .then((response) => {
+          console.log(response.data);
+          let workflow = response.data
+
+          workflow.nodes.forEach((node) => {
+            // console.log(node);
+            that.renderNode(node);
+          });
+          workflow.links.forEach((link) => {
+            console.log(link);
+            that.renderLinks(link, that);
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
+   
+    // console.log("here here");
+  }
+  renderLinks(link,that) {
+    let newlink = null;
+    let connection = link;
+    if (link.source.nodeID !== "genesis") {
+      let sourcePort = this.props.app.diagramEngine
+        .getDiagramModel()
+        .getNode(link.source.nodeID)
+        .getPort(link.source.port);
+
+      let targetPort = this.props.app.diagramEngine
+        .getDiagramModel()
+        .getNode(link.target.nodeID)
+        .getPort(link.target.port);
+
+      // console.log(targetPort.getPort('input'));
+
+      newlink = sourcePort.link(targetPort);
+      connection.link_id = newlink.id;
+      // newlink.addLabel("I am Awesome!");
+
+      if (newlink !== null) {
+
+        that.props.app.diagramEngine.getDiagramModel().addLink(newlink);
+
+        let data = that.state.connections.concat(connection);
+
+        that.setState({
+          connections: _.uniqWith(data, _.isEqual),
+          // connections: Lodash.uniq(,'stamp')
+        });
+      }
+    }
   }
 
   renderNode(tool) {
     // console.log(type);
     let node = null;
-    let link = null;
     switch (tool.nodeType) {
       case "File":
         node = new FileNodeModel();
@@ -318,19 +373,7 @@ export class BodyWidget extends React.Component {
         break;
       case "Peek":
         node = new PeekNodeModel();
-        let port1 = node.addInPort("input");
-
-        let currPort = this.props.app.diagramEngine
-          .getDiagramModel()
-          .getNode("2de0a8a8-06f6-4924-b9ab-793613865f8e")
-          .getPortFromID("output");
-
-        console.log("file node");
-        console.log(currPort);
-
-        link = port1.link(currPort);
-        link.addLabel("I am Awesome!");
-
+        node.addInPort("input");
         break;
       case "Output":
         node = new OutputNodeModel();
@@ -351,7 +394,6 @@ export class BodyWidget extends React.Component {
       node.addListener({
         selectionChanged: function (e) {
           console.log(node);
-          console.log(tool);
 
           // Do something here
           if (e.isSelected) {
@@ -360,6 +402,10 @@ export class BodyWidget extends React.Component {
               nodeType: e.entity.type,
               properties: e.entity.properties,
             };
+
+            e.entity.properties.x = e.entity.x;
+            e.entity.properties.y = e.entity.y;
+
             that.setState({
               selected_node: selected_node,
             });
@@ -398,10 +444,6 @@ export class BodyWidget extends React.Component {
       });
 
       this.props.app.getDiagramEngine().getDiagramModel().addNode(node);
-
-      if (link !== null) {
-        this.props.app.getDiagramEngine().getDiagramModel().addLink(link);
-      }
     }
   }
 
@@ -513,7 +555,7 @@ export class BodyWidget extends React.Component {
       });
   };
 
-  runWorkflow = (e) => {
+  runWorkflow = (e, action) => {
     e.preventDefault();
 
     // let links = Object.keys(this.props.app.diagramEngine.getDiagramModel().links);
@@ -526,9 +568,6 @@ export class BodyWidget extends React.Component {
     let cnt = 1;
     let newConns = [];
     let runWorkflow = true;
-    console.log("INPUT NODES");
-
-    console.log(inputNodes);
 
     inputNodes.forEach((node) => {
       let newConnection = {
@@ -578,35 +617,46 @@ export class BodyWidget extends React.Component {
       let legacyConnections = [...this.state.connections];
       let payloadConnections = legacyConnections.concat(newConns);
       let payload = {
+        name: "pandas_workflow.fly",
+        _id: "93232fb5-7fd7-4952-8fff-ec1c051e2997",
+        description: "Hello world",
         links: payloadConnections,
         nodes: payloadNode,
       };
 
-      console.log(payload);
-      console.log(this.state.nodes);
+      if (action == "execute") {
+        this.setState({ runningState: "running" });
 
-      this.setState({ runningState: "running" });
-      Axios.post("http://127.0.0.1:5000/execute", payload)
-        .then((response) => {
-          console.log(response.data);
-          let payloadData = response.data;
+        Axios.post("http://127.0.0.1:5000/execute", payload)
+          .then((response) => {
+            console.log(response.data);
+            let payloadData = response.data;
 
-          payloadData.forEach((node) => {
-            if (node.id !== "genesis") {
-              let workingNode = that.props.app.diagramEngine
-                .getDiagramModel()
-                .getNode(node.id);
-              workingNode.properties = node.properties;
-              console.log(workingNode);
-            }
+            payloadData.forEach((node) => {
+              if (node.id !== "genesis") {
+                let workingNode = that.props.app.diagramEngine
+                  .getDiagramModel()
+                  .getNode(node.id);
+                workingNode.properties = node.properties;
+              }
+            });
+            that.setState({ runningState: "run" });
+          })
+          .catch((e) => {
+            console.log(e);
           });
-          that.setState({ runningState: "run" });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
 
-      this.props.app.diagramEngine.repaintCanvas();
+        this.props.app.diagramEngine.repaintCanvas();
+      }
+      if (action == "save") {
+        Axios.post("http://127.0.0.1:5000/save-workflow", payload)
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     } else {
       console.log("Failed, MISSING REQUIRED INFO");
       this.props.app.diagramEngine.repaintCanvas();
@@ -820,12 +870,22 @@ export class BodyWidget extends React.Component {
                             <div className="col">
                               <Button
                                 className="float-right"
+                                color="danger"
+                                onClick={(e) => this.runWorkflow(e, "save")}
+                                size="sm"
+                              >
+                                Save
+                              </Button>
+                            </div>
+                            <div className="col">
+                              <Button
+                                className="float-right"
                                 color={
                                   this.state.runningState == "run"
                                     ? "success"
                                     : "danger"
                                 }
-                                onClick={(e) => this.runWorkflow(e)}
+                                onClick={(e) => this.runWorkflow(e, "execute")}
                                 size="sm"
                               >
                                 {this.state.runningState == "run"
@@ -1051,6 +1111,10 @@ export class BodyWidget extends React.Component {
                                           nodeType: e.entity.type,
                                           properties: e.entity.properties,
                                         };
+
+                                        e.entity.properties.x = e.entity.x;
+                                        e.entity.properties.y = e.entity.y;
+                                        
                                         that.setState({
                                           selected_node: selected_node,
                                         });
@@ -1096,6 +1160,7 @@ export class BodyWidget extends React.Component {
                                   this.forceUpdate();
                                 }}
                                 onDragOver={(event) => {
+
                                   event.preventDefault();
                                 }}
                               >

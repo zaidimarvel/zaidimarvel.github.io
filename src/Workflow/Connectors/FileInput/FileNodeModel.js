@@ -22,7 +22,7 @@ export class FileNodeModel extends NodeModel {
     }
    
     addOutPort(label) {
-        return this.addPort(new  FilePortModel(false, Toolkit.UID(), label));
+        return this.addPort(new  FilePortModel(false, label, label));
     }
 
     printResults(node, port){
