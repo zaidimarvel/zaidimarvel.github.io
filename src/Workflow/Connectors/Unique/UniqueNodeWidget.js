@@ -30,7 +30,7 @@ export class UniqueNodeWidget extends React.Component {
     }
     createMarkup() {
         return <div>
-        <i className="fas fa-code-branch"  style={{
+        <i className="fa fa-code-branch"  style={{
               fontSize: "1.5em"
             }}/>
             </div>;

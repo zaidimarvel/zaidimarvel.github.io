@@ -1,4 +1,5 @@
 import * as React from "react";
+import "./tray.css";
 
 export class TrayItemWidget extends React.Component {
     render() {
@@ -6,7 +7,7 @@ export class TrayItemWidget extends React.Component {
             <div style={{
                 float: "left",
                 textAlign: "center",
-                padding: '10px'
+                padding: '7px'
                 
               }}>
             <div
@@ -20,10 +21,10 @@ export class TrayItemWidget extends React.Component {
                 }}
                 className={ "tray-item icon icon-shape text-white rounded-circle shadow" }
             >
-                <i className={ "fas fa-" + this.props.icon } />
+                <i className={ "fa fa-" + this.props.icon } />
                 {/* {this.props.name} */}
             </div>
-            <p className="text-light ls-1 mb-1"> {this.props.name}</p>
+            <p className="ls-1 mb-1"> {this.props.name}</p>
             </div>
         );
     }

@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
+// Variables
+$font-lato: "Lato", sans-serif;
+$black-1: #1A1A1A;
+$black-2: #333;
+$black-3: #555;
+$white: #FFF;
+$white-1: #EEE;
+*,* ::after, *::before {
+  box-sizing: border-box
+}
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: $font-lato,sans-serif;
+}
+
+.srd-demo-canvas {
+  height: 100%;
+  min-height: 100vh;
+  background-color: #3c3c3c !important;
+  background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+}
+
+.srd-node{
+  position: absolute;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  user-select: none;
+  cursor: move;
+  pointer-events: all;
+  border: 0.2rem solid rgb(0,0,0);
+  border-radius: 0.3rem;
+  min-width: 3rem;
+  &--selected{
+    border: 0.2rem solid rgb(0,192,255);
+  }
+  > .srd-default-node{
+    border-width: 0;
+    border-radius: 0;
+  }
+}
+
+.Scene2{
+  width: 10rem;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: 1.4rem;
+  background: linear-gradient(#bbb,#777);
+  .srd-port{
+    border: 2px solid black;
+    background-color: rgba(200,100,100,1);
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  .left-port{
+    float: left;
+    width: 15%;
+  }
+  .scene{
+    float: left;
+    width: 70%;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .right-port{
+    float: left;
+    width: 15%;
+  }
+}
+
+.widget-container {
+  width: 15rem;
+  .srd-port{
+    width: 12px;
+    height: 12px;
+    background-color: rgba(200,200,200,1);
+  }
+  .widget-header{
+    width: 100%;
+    height: 24px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    .left-port{
+      float: left;
+      width: 20%;
+      .srd-port{
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+    .scene{
+      float: left;
+      text-align: center;
+      width: 60%;
+    }
+    .right-port{
+      float: right;
+      width: 20%;
+      .srd-port{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+    }
+  }
+  .widget-content{
+    .widget-id{
+      width: 100%;
+      height: 24px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      .widget-id-label{
+        margin-left: 10%;
+        margin-right: 2%;
+        min-width: 28%;
+        max-width: 28%;
+        float: left;
+        text-align: right;
+      }
+      .widget-id-input{
+        margin-right: 20%;
+        min-width: 40%;
+        max-width: 40%;
+        float: left;
+      }
+    }
+    .widget-next{
+      width: 100%;
+      height: 24px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      .srd-port{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      .widget-next-label{
+        margin-left: 10%;
+        margin-right: 2%;
+        min-width: 28%;
+        max-width: 28%;
+        float: left;
+        text-align: right;
+      }
+      .widget-next-input{
+        min-width: 40%;
+        max-width: 40%;
+        float: left;
+      }
+    }
+    .widget-hotspot{
+      width: 100%;
+      height: 24px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      .srd-port{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        float: left;
+      }
+      .widget-hotspot-del{
+        float: left;
+        margin-left: 1%;
+      }
+      .widget-hotspot-label{
+        margin-right: 2%;
+        min-width: 28%;
+        max-width: 28%;
+        float: left;
+        text-align: right;
+      }
+      .widget-hotspot-input{
+        min-width: 41%;
+        max-width: 41%;
+        float: left;
+      }
+    }
+    .widget-add{
+      display: block;
+      margin: 0 auto;
+      width: 10%;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      button{
+        text-align: center;
+      }
+    }
+  }
+}
+
+

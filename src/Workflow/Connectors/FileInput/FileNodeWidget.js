@@ -30,7 +30,7 @@ export class FileNodeWidget extends React.Component {
     }
     createMarkup() {
         return <div>
-        <i className="fas fa-file-alt"  style={{
+        <i className="fa fa-file"  style={{
               fontSize: "1.5em"
             }}/>
             </div>;

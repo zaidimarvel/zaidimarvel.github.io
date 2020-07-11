@@ -30,7 +30,7 @@ export class PeekNodeWidget extends React.Component {
     }
     createMarkup() {
         return <div>
-        <i className="fas fa-eye"  style={{
+        <i className="fa fa-eye"  style={{
               fontSize: "1.5em"
             }}/>
             </div>;

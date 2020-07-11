@@ -36,17 +36,17 @@ import Axios from "axios";
 
 import FilePondComp from "./FilePondComp";
 import {
-  Card,
+  // Card,
   CardHeader,
   CardBody,
   Container,
-  Row,
-  Col,
+  // Row,
+  // Col,
   Form,
   FormGroup,
   Input,
   Button,
-  Table,
+  // Table,
   TabContent,
   TabPane,
   Nav,
@@ -55,6 +55,8 @@ import {
   CardTitle,
   CardText,
 } from "reactstrap";
+
+import { Row, Col, Card, Table, Tabs, Tab } from "react-bootstrap";
 
 let strModel = "";
 
@@ -93,174 +95,168 @@ export class BodyWidget extends React.Component {
 
   componentWillMount() {
     let that = this;
-    this.model = new DiagramModel();
 
-    this.setState({
-      nodes: [],
-      connections: [],
-      display_results: [],
-    });
+    Axios.get(
+      "http://127.0.0.1:5000/get-workflow?_id=93232fb5-7fd7-4952-8fff-ec1c051e2997"
+    )
+      .then((response) => {
 
+        that.model = new DiagramModel();
+        that.setState({
+          nodes: [],
+          connections: [],
+          display_results: [],
+        });
 
-    this.model.addListener({
-      nodesUpdated: function (e) {
-        console.log("Node have been updated");
-        // Do something here
-
-        console.log(e);
-        if (e.isCreated) {
-          let newNode = {
-            nodeType: e.node.type,
-            id: e.node.id,
-            properties: e.node.properties,
-            ports: JSON.parse(
-              JSON.stringify(e.node.ports, that.getCircularReplacer())
-            ),
-            annotation: "Plugin Initialized",
-          };
-          that.setState((state, props) => ({
-            nodes: state.nodes.concat(newNode),
-            node: newNode,
-          }));
-        }
-      },
-      linksUpdated: function (event) {
-        event.link.addListener({
-          selectionChanged: function (d) {
-            // console.log("Link Selected");
-          },
-          targetPortChanged: function (d) {
-            console.log("Target Port Changed");
-            console.log(event.link.targetPort);
-
-            if (event.link.targetPort) {
-              if (event.link.targetPort.name == event.link.sourcePort.name) {
-                console.log("Same as source");
-                let results = event.link.sourcePort.parent.printResults(
-                  event.link.sourcePort.parent,
-                  event.link.sourcePort.label
-                );
-                let selected_node = {
-                  id: event.link.sourcePort.parent.id,
-                  nodeType: event.link.sourcePort.parent.type,
-                  properties: event.link.sourcePort.parent.properties,
-                };
-
-                that.setState({
-                  display_results: results,
-                  selected_node: selected_node,
-                  // connections: Lodash.uniq(,'stamp')
-                });
-
-                event.link.remove();
-              } else if (event.link.targetPort.in) {
-                // console.log("Different from source");
-                let link = event.link;
-                let linksObject = link.sourcePort["links"];
-                let targetObject = link.targetPort["links"];
-
-                console.log(Object.keys(targetObject));
-                console.log(link.targetPort.parent.properties);
-
-                if (
-                  Object.keys(targetObject).length >
-                  link.targetPort.parent.properties.maxLinks
-                ) {
-                  event.link.remove();
-                } else {
-                  // console.log(d);
-                  let newConnection = {
-                    stamp:
-                      link.sourcePort.parent.id +
-                      "" +
-                      link.targetPort.parent.id,
-                    link_id: link.id,
-                    source: {
-                      nodeType: link.sourcePort.parent.type,
-                      port: link.sourcePort.label,
-                      links: Object.keys(linksObject),
-                      nodeID: link.sourcePort.parent.id,
-                      properties: link.sourcePort.parent.properties,
-                    },
-                    target: {
-                      nodeType: link.targetPort.parent.type,
-                      port: link.targetPort.label,
-                      nodeID: link.targetPort.parent.id,
-                      properties: link.targetPort.parent.properties,
-                    },
-                  };
-                  let tarNode = that.props.app.diagramEngine
-                    .getDiagramModel()
-                    .getNode(link.targetPort.parent.id);
-                  tarNode.properties.headers =
-                    link.sourcePort.parent.properties.headers;
-
-                  let data = that.state.connections.concat(newConnection);
-
-                  that.setState({
-                    connections: _.uniqWith(data, _.isEqual),
-                    // connections: Lodash.uniq(,'stamp')
-                  });
-                }
-              } else {
-                console.log("Dont resort to here");
-                event.link.remove();
-              }
+        that.model.addListener({
+          nodesUpdated: function (e) {
+            console.log("Node have been updated");
+            // console.log(e);
+            if (e.isCreated) {
+              let newNode = {
+                nodeType: e.node.type,
+                id: e.node.id,
+                properties: e.node.properties,
+                ports: JSON.parse(
+                  JSON.stringify(e.node.ports, that.getCircularReplacer())
+                ),
+                annotation: "Plugin Initialized",
+              };
+              that.setState((state, props) => ({
+                nodes: state.nodes.concat(newNode),
+                node: newNode,
+              }));
             }
           },
-          sourcePortChanged: function (d) {
-            // console.log("Source Port");
-            // e.remove()
-          },
-          entityRemoved: function (d) {
-            console.log(d.entity);
-
-            let data = that.state.connections.filter(
-              (link) => link.link_id != d.entity.id
-            );
-
-            that.setState({
-              connections: _.uniqWith(data, _.isEqual),
-              // connections: Lodash.uniq(,'stamp')
+          linksUpdated: function (event) {
+            event.link.addListener({
+              selectionChanged: function (d) {
+                // console.log("Link Selected");
+              },
+              targetPortChanged: function (d) {
+                console.log("Target Port Changed");
+                console.log(event.link.targetPort);
+    
+                if (event.link.targetPort) {
+                  if (event.link.targetPort.name == event.link.sourcePort.name) {
+                    console.log("Same as source");
+                    let results = event.link.sourcePort.parent.printResults(
+                      event.link.sourcePort.parent,
+                      event.link.sourcePort.label
+                    );
+                    let selected_node = {
+                      id: event.link.sourcePort.parent.id,
+                      nodeType: event.link.sourcePort.parent.type,
+                      properties: event.link.sourcePort.parent.properties,
+                    };
+    
+                    that.setState({
+                      display_results: results,
+                      selected_node: selected_node,
+                      // connections: Lodash.uniq(,'stamp')
+                    });
+    
+                    event.link.remove();
+                  } else if (event.link.targetPort.in) {
+                    // console.log("Different from source");
+                    let link = event.link;
+                    let linksObject = link.sourcePort["links"];
+                    let targetObject = link.targetPort["links"];
+    
+                    console.log(Object.keys(targetObject));
+                    console.log(link.targetPort.parent.properties);
+    
+                    if (
+                      Object.keys(targetObject).length >
+                      link.targetPort.parent.properties.maxLinks
+                    ) {
+                      event.link.remove();
+                    } else {
+                      // console.log(d);
+                      let newConnection = {
+                        stamp:
+                          link.sourcePort.parent.id +
+                          "" +
+                          link.targetPort.parent.id,
+                        link_id: link.id,
+                        source: {
+                          nodeType: link.sourcePort.parent.type,
+                          port: link.sourcePort.label,
+                          links: Object.keys(linksObject),
+                          nodeID: link.sourcePort.parent.id,
+                          properties: link.sourcePort.parent.properties,
+                        },
+                        target: {
+                          nodeType: link.targetPort.parent.type,
+                          port: link.targetPort.label,
+                          nodeID: link.targetPort.parent.id,
+                          properties: link.targetPort.parent.properties,
+                        },
+                      };
+                      let tarNode = that.props.app.diagramEngine
+                        .getDiagramModel()
+                        .getNode(link.targetPort.parent.id);
+                      tarNode.properties.headers =
+                        link.sourcePort.parent.properties.headers;
+    
+                      let data = that.state.connections.concat(newConnection);
+    
+                      that.setState({
+                        connections: _.uniqWith(data, _.isEqual),
+                        // connections: Lodash.uniq(,'stamp')
+                      });
+                    }
+                  } else {
+                    console.log("Dont resort to here");
+                    event.link.remove();
+                  }
+                }
+              },
+              sourcePortChanged: function (d) {
+                // console.log("Source Port");
+                // e.remove()
+              },
+              entityRemoved: function (d) {
+                console.log(d.entity);
+    
+                let data = that.state.connections.filter(
+                  (link) => link.link_id != d.entity.id
+                );
+    
+                that.setState({
+                  connections: _.uniqWith(data, _.isEqual),
+                  // connections: Lodash.uniq(,'stamp')
+                });
+                console.log(data);
+    
+                console.log("Link Removed");
+              },
             });
-            console.log(data);
-
-            console.log("Link Removed");
           },
         });
-      },
-    });
+    
+        that.props.app.diagramEngine.setDiagramModel(this.model);
+    
+        console.log("Model has been updated");
+        console.log(response.data);
+        let workflow = response.data;
 
-    this.props.app.diagramEngine.setDiagramModel(this.model);
-
-
-  }
-  componentDidMount() {
-
-    let that = this
-
-    Axios.get("http://127.0.0.1:5000/get-workflow?_id=93232fb5-7fd7-4952-8fff-ec1c051e2997")
-        .then((response) => {
-          console.log(response.data);
-          let workflow = response.data
-
-          workflow.nodes.forEach((node) => {
-            // console.log(node);
-            that.renderNode(node);
-          });
-          workflow.links.forEach((link) => {
-            console.log(link);
-            that.renderLinks(link, that);
-          });
-        })
-        .catch((e) => {
-          console.log(e);
+        workflow.nodes.forEach((node) => {
+          // console.log(node);
+          that.renderNode(node, that);
         });
+        workflow.links.forEach((link) => {
+          // console.log(link);
+          that.renderLinks(link, that);
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
 
-   
     // console.log("here here");
   }
-  renderLinks(link,that) {
+  renderLinks(link, that) {
     let newlink = null;
     let connection = link;
     if (link.source.nodeID !== "genesis") {
@@ -281,7 +277,6 @@ export class BodyWidget extends React.Component {
       // newlink.addLabel("I am Awesome!");
 
       if (newlink !== null) {
-
         that.props.app.diagramEngine.getDiagramModel().addLink(newlink);
 
         let data = that.state.connections.concat(connection);
@@ -294,7 +289,8 @@ export class BodyWidget extends React.Component {
     }
   }
 
-  renderNode(tool) {
+  renderNode(tool, vm) {
+    console.log("Start processing");
     // console.log(type);
     let node = null;
     switch (tool.nodeType) {
@@ -389,7 +385,7 @@ export class BodyWidget extends React.Component {
       node.y = tool.properties.y;
 
       node.properties = tool.properties;
-      let that = this;
+      let that = vm;
 
       node.addListener({
         selectionChanged: function (e) {
@@ -442,8 +438,8 @@ export class BodyWidget extends React.Component {
           console.log(data);
         },
       });
-
-      this.props.app.getDiagramEngine().getDiagramModel().addNode(node);
+      // that.props.app.diagramEngine.getDiagramModel().addNode(node);
+      vm.props.app.getDiagramEngine().getDiagramModel().addNode(node);
     }
   }
 
@@ -606,6 +602,8 @@ export class BodyWidget extends React.Component {
       newConns.push(newConnection);
       // let data = that.state.connections.concat(newConnection);
     });
+
+    console.log(this.state);
 
     if (runWorkflow && this.state.nodes.length > 0) {
       let newNode = {
@@ -824,430 +822,772 @@ export class BodyWidget extends React.Component {
 
   render() {
     return (
-      <Container className="mt--5" fluid>
-        <Row>
-          <Col className="mb-5 mb-xl-0" xl="12">
-            <Card className=" shadow">
-              <Nav className="" tabs>
-                <NavItem>
-                  <NavLink
-                    className={classnames({
-                      active: this.state.activeTab === "1",
-                    })}
-                    onClick={() => {
-                      this.toggleWorkflow("1");
+      <Row>
+        <Col md={8} xl={8}>
+          <Card>
+            <Card.Header>
+              <Card.Title as="h5">Workspace</Card.Title>
+              <div
+                style={{
+                  float: "right",
+                }}
+              >
+                <Button
+                  className="label theme-bg2 text-white f-12"
+                  onClick={(e) => this.runWorkflow(e, "save")}
+                  size="sm"
+                >
+                  Save
+                </Button>
+
+                <Button
+                  className="label theme-bg text-white f-12"
+                  onClick={(e) => this.runWorkflow(e, "execute")}
+                  size="sm"
+                >
+                  Run
+                </Button>
+              </div>
+              {/* <a href="#" className="label theme-bg text-white f-12">Approve</a></div> */}
+            </Card.Header>
+            <Card.Body bsPrefix="card-body pa-0">
+              <div className="row align-items-center justify-content-center">
+                <div className="col-12">
+                  <TrayWidget>
+                    <TrayItemWidget
+                      model={{ type: "File" }}
+                      name="Input"
+                      icon="file-alt"
+                      color="#009688"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Output" }}
+                      name="Output"
+                      icon="file-export"
+                      color="#009688"
+                    />
+
+                    <TrayItemWidget
+                      model={{ type: "Filter" }}
+                      name="Filter"
+                      icon="filter"
+                      color="linear-gradient(to right, #de6262, #ffb88c"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Formula" }}
+                      name="Formula"
+                      icon="square-root-alt"
+                      color="#02aab0"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Union" }}
+                      name="Union"
+                      icon="layer-group"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Unique" }}
+                      name="Unique"
+                      icon="code-branch"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Peek" }}
+                      name="Peek"
+                      icon="eye"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Select" }}
+                      name="Select"
+                      icon="tasks"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Sort" }}
+                      name="Sort"
+                      icon="sort"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Cleanup" }}
+                      name="Cleanup"
+                      icon="broom"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Group" }}
+                      name="GroupBy"
+                      icon="object-group"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Sample" }}
+                      name="Sample"
+                      icon="vials"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Replace" }}
+                      name="Replace"
+                      icon="search"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "TextToColumn" }}
+                      name="TextToColumn"
+                      icon="columns"
+                      color="#7b4397"
+                    />
+                    <TrayItemWidget
+                      model={{ type: "Join" }}
+                      name="Join"
+                      icon="columns"
+                      color="#7b4397"
+                    />
+                  </TrayWidget>
+                </div>
+              </div>
+
+              <div className="body">
+                <div className="content">
+                  <div
+                    className="diagram-layer"
+                    onDrop={(event) => {
+                      let data = JSON.parse(
+                        event.dataTransfer.getData("storm-diagram-node")
+                      );
+
+                      let node = null;
+                      switch (data.type) {
+                        case "File":
+                          node = new FileNodeModel();
+                          node.addOutPort("output");
+                          break;
+                        case "Filter":
+                          node = new FilterNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("true");
+                          node.addOutPort("false");
+                          break;
+                        case "Join":
+                          node = new JoinNodeModel();
+                          // node.addInPort("input");
+                          node.addInPort("left");
+                          node.addInPort("right");
+
+                          node.addOutPort("ljoin");
+                          node.addOutPort("ijoin");
+                          node.addOutPort("rjoin");
+                          break;
+                        case "Formula":
+                          node = new FormulaNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "Union":
+                          node = new UnionNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "Select":
+                          node = new SelectNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "Sort":
+                          node = new SortNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "Replace":
+                          node = new ReplaceNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "TextToColumn":
+                          node = new TextToColumnNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+
+                        case "Cleanup":
+                          node = new CleanupNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "Group":
+                          node = new GroupNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "Sample":
+                          node = new SampleNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("output");
+                          break;
+                        case "Unique":
+                          node = new UniqueNodeModel();
+                          node.addInPort("input");
+                          node.addOutPort("unique");
+                          node.addOutPort("duplicate");
+                          break;
+                        case "Peek":
+                          node = new PeekNodeModel();
+                          node.addInPort("input");
+                          break;
+                        case "Output":
+                          node = new OutputNodeModel();
+                          node.addInPort("input");
+                          break;
+                      }
+                      let points = this.props.app
+                        .getDiagramEngine()
+                        .getRelativeMousePoint(event);
+                      node.x = points.x;
+                      node.y = points.y;
+
+                      node.properties.x = points.x;
+                      node.properties.y = points.y;
+
+                      let that = this;
+
+                      node.addListener({
+                        selectionChanged: function (e) {
+                          // Do something here
+                          if (e.isSelected) {
+                            let selected_node = {
+                              id: e.entity.id,
+                              nodeType: e.entity.type,
+                              properties: e.entity.properties,
+                            };
+
+                            e.entity.properties.x = e.entity.x;
+                            e.entity.properties.y = e.entity.y;
+
+                            that.setState({
+                              selected_node: selected_node,
+                            });
+
+                            // switch(e.entity.type){
+                            //     case "Formula":
+                            //         break
+                            //     case "Filter":
+                            //         break
+                            //     case "File":
+                            //         break
+                            //     case "Union":
+                            //         break
+                            // }
+                          } else {
+                            that.setState({
+                              selected_node: null,
+                            });
+                          }
+                        },
+                        entityRemoved: function (e) {
+                          // Do something here
+                          console.log("nODE REMOVED");
+
+                          console.log(e);
+
+                          let data = that.state.nodes.filter(
+                            (node) => node.id != e.entity.id
+                          );
+
+                          that.setState({
+                            nodes: _.uniqWith(data, _.isEqual),
+                            // connections: Lodash.uniq(,'stamp')
+                          });
+
+                          console.log(data);
+                        },
+                      });
+                      this.props.app
+                        .getDiagramEngine()
+                        .getDiagramModel()
+                        .addNode(node);
+                      this.forceUpdate();
+                    }}
+                    onDragOver={(event) => {
+                      event.preventDefault();
                     }}
                   >
-                    Pandas Workflow.fly*
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className={classnames({
-                      active: this.state.activeTab === "2",
-                    })}
-                    onClick={() => {
-                      this.toggleWorkflow("2");
-                    }}
-                  >
-                    Workflow2.fly
-                  </NavLink>
-                </NavItem>
-              </Nav>
-              <TabContent activeTab={this.state.activeTab}>
-                <TabPane tabId="1">
-                  <Row>
-                    <Col className="mb-5 mb-xl-0 pr-md-0" xl="8">
-                      <Card>
-                        <CardHeader className="bg-transparent pt-2 pb-2">
-                          <Row className="align-items-center">
-                            <div className="col">
-                              <h3 className="text-uppercase text-light ls-1 mb-1">
-                                My Workspace
-                              </h3>
-                              {/* <Button onClick={() => this.props.app.getDiagramEngine().zoomToFit()}>Zoom to fit</Button> */}
-                            </div>
-                            <div className="col">
-                              <Button
-                                className="float-right"
-                                color="danger"
-                                onClick={(e) => this.runWorkflow(e, "save")}
-                                size="sm"
-                              >
-                                Save
-                              </Button>
-                            </div>
-                            <div className="col">
-                              <Button
-                                className="float-right"
-                                color={
-                                  this.state.runningState == "run"
-                                    ? "success"
-                                    : "danger"
-                                }
-                                onClick={(e) => this.runWorkflow(e, "execute")}
-                                size="sm"
-                              >
-                                {this.state.runningState == "run"
-                                  ? "Run"
-                                  : "Running"}
-                              </Button>
-                            </div>
-                          </Row>
-                        </CardHeader>
-                        <CardHeader className="bg-transparent pt-0 pb-0">
-                          <Row className="align-items-left">
-                            <div className="col">
-                              <TrayWidget>
-                                <TrayItemWidget
-                                  model={{ type: "File" }}
-                                  name="Input"
-                                  icon="file-alt"
-                                  color="#009688"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Output" }}
-                                  name="Output"
-                                  icon="file-export"
-                                  color="#009688"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Filter" }}
-                                  name="Filter"
-                                  icon="filter"
-                                  color="linear-gradient(to right, #de6262, #ffb88c"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Formula" }}
-                                  name="Formula"
-                                  icon="square-root-alt"
-                                  color="#02aab0"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Union" }}
-                                  name="Union"
-                                  icon="layer-group"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Unique" }}
-                                  name="Unique"
-                                  icon="code-branch"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Peek" }}
-                                  name="Peek"
-                                  icon="eye"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Select" }}
-                                  name="Select"
-                                  icon="tasks"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Sort" }}
-                                  name="Sort"
-                                  icon="sort"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Cleanup" }}
-                                  name="Cleanup"
-                                  icon="broom"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Group" }}
-                                  name="GroupBy"
-                                  icon="object-group"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Sample" }}
-                                  name="Sample"
-                                  icon="vials"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Replace" }}
-                                  name="Replace"
-                                  icon="search"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "TextToColumn" }}
-                                  name="TextToColumn"
-                                  icon="columns"
-                                  color="#7b4397"
-                                />
-                                <TrayItemWidget
-                                  model={{ type: "Join" }}
-                                  name="Join"
-                                  icon="columns"
-                                  color="#7b4397"
-                                />
-                              </TrayWidget>
-                            </div>
-                          </Row>
-                        </CardHeader>
-                        <CardBody
-                          className="p--1"
-                          style={{ padding: "0.5em", borderRadius: "20px" }}
-                        >
-                          <div className="body">
-                            <div className="content">
-                              <div
-                                className="diagram-layer"
-                                onDrop={(event) => {
-                                  let data = JSON.parse(
-                                    event.dataTransfer.getData(
-                                      "storm-diagram-node"
-                                    )
-                                  );
+                    {/* smartRouting={true}  */}
+                    <DiagramWidget
+                      className="srd-demo-canvas"
+                      deleteKeys={[46]}
+                      diagramEngine={this.props.app.getDiagramEngine()}
+                      allowLooseLinks={false}
+                      maxNumberPointsPerLink="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4} xl={4} className="m-b-30">
+          <Tabs defaultActiveKey="config" id="uncontrolled-tab-example">
+            <Tab eventKey="config" title="Configuration">
+              <span className="d-block m-t-5">
+                Showing{" "}
+                <code>
+                  {this.state.selected_node == null
+                    ? "Workspace"
+                    : this.state.selected_node.properties.name}{" "}
+                </code>{" "}
+                Properties
+              </span>
 
-                                  let node = null;
-                                  switch (data.type) {
-                                    case "File":
-                                      node = new FileNodeModel();
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Filter":
-                                      node = new FilterNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("true");
-                                      node.addOutPort("false");
-                                      break;
-                                    case "Join":
-                                      node = new JoinNodeModel();
-                                      // node.addInPort("input");
-                                      node.addInPort("left");
-                                      node.addInPort("right");
+              {/* {tabContent} */}
+              {this.renderProperties(this.state.selected_node)}
+            </Tab>
+            <Tab eventKey="api" title="API">
+              {/* {tabContent} */}
+            </Tab>
+          </Tabs>
+        </Col>
 
-                                      node.addOutPort("ljoin");
-                                      node.addOutPort("ijoin");
-                                      node.addOutPort("rjoin");
-                                      break;
-                                    case "Formula":
-                                      node = new FormulaNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Union":
-                                      node = new UnionNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Select":
-                                      node = new SelectNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Sort":
-                                      node = new SortNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Replace":
-                                      node = new ReplaceNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "TextToColumn":
-                                      node = new TextToColumnNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-
-                                    case "Cleanup":
-                                      node = new CleanupNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Group":
-                                      node = new GroupNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Sample":
-                                      node = new SampleNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("output");
-                                      break;
-                                    case "Unique":
-                                      node = new UniqueNodeModel();
-                                      node.addInPort("input");
-                                      node.addOutPort("unique");
-                                      node.addOutPort("duplicate");
-                                      break;
-                                    case "Peek":
-                                      node = new PeekNodeModel();
-                                      node.addInPort("input");
-                                      break;
-                                    case "Output":
-                                      node = new OutputNodeModel();
-                                      node.addInPort("input");
-                                      break;
-                                  }
-                                  let points = this.props.app
-                                    .getDiagramEngine()
-                                    .getRelativeMousePoint(event);
-                                  node.x = points.x;
-                                  node.y = points.y;
-
-                                  node.properties.x = points.x;
-                                  node.properties.y = points.y;
-
-                                  let that = this;
-
-                                  node.addListener({
-                                    selectionChanged: function (e) {
-                                      // Do something here
-                                      if (e.isSelected) {
-                                        let selected_node = {
-                                          id: e.entity.id,
-                                          nodeType: e.entity.type,
-                                          properties: e.entity.properties,
-                                        };
-
-                                        e.entity.properties.x = e.entity.x;
-                                        e.entity.properties.y = e.entity.y;
-                                        
-                                        that.setState({
-                                          selected_node: selected_node,
-                                        });
-
-                                        // switch(e.entity.type){
-                                        //     case "Formula":
-                                        //         break
-                                        //     case "Filter":
-                                        //         break
-                                        //     case "File":
-                                        //         break
-                                        //     case "Union":
-                                        //         break
-                                        // }
-                                      } else {
-                                        that.setState({
-                                          selected_node: null,
-                                        });
-                                      }
-                                    },
-                                    entityRemoved: function (e) {
-                                      // Do something here
-                                      console.log("nODE REMOVED");
-
-                                      console.log(e);
-
-                                      let data = that.state.nodes.filter(
-                                        (node) => node.id != e.entity.id
-                                      );
-
-                                      that.setState({
-                                        nodes: _.uniqWith(data, _.isEqual),
-                                        // connections: Lodash.uniq(,'stamp')
-                                      });
-
-                                      console.log(data);
-                                    },
-                                  });
-                                  this.props.app
-                                    .getDiagramEngine()
-                                    .getDiagramModel()
-                                    .addNode(node);
-                                  this.forceUpdate();
-                                }}
-                                onDragOver={(event) => {
-
-                                  event.preventDefault();
-                                }}
-                              >
-                                {/* smartRouting={true}  */}
-                                <DiagramWidget
-                                  className="srd-demo-canvas"
-                                  deleteKeys={[46]}
-                                  diagramEngine={this.props.app.getDiagramEngine()}
-                                  allowLooseLinks={false}
-                                  maxNumberPointsPerLink="0"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </CardBody>
-                      </Card>
-                    </Col>
-                    <Col xl="4" className=" pl-md-0">
-                      <Card
-                        style={{
-                          height: "100%",
-                        }}
-                      >
-                        <CardHeader className="bg-transparent">
-                          <Row className="align-items-center">
-                            <div className="col">
-                              {/* <h6 className="text-uppercase text-muted ls-1 mb-1">
-                      Performance
-                    </h6> */}
-                              <h2 className="mb-0">
-                                {this.state.selected_node == null
-                                  ? "Workspace"
-                                  : this.state.selected_node.properties
-                                      .name}{" "}
-                                - Properties
-                              </h2>
-                            </div>
-                          </Row>
-                        </CardHeader>
-                        <CardBody>
-                          {/* Chart */}
-                          {/* <span id="coderea">{ JSON.stringify(this.state.selected_node) }</span> */}
-                          {this.renderProperties(this.state.selected_node)}
-                        </CardBody>
-                      </Card>
-                    </Col>
-                  </Row>
-                  <Row className="mt-5">
-                    <Col className="mb-5 mb-xl-0" xl="12">
-                      <Card className="shadow">
-                        <CardHeader className="border-0">
-                          <Row className="align-items-center">
-                            <div className="col">
-                              <h3 className="mb-0">Results </h3>
-                            </div>
-                            <div className="col text-right">
-                              {/* <Button
-                        color="primary"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                        size="sm"
-                      >
-                        See all
-                      </Button> */}
-                            </div>
-                          </Row>
-                        </CardHeader>
-
-                        {this.renderPreview(this.state)}
-                      </Card>
-                    </Col>
-                  </Row>
-                </TabPane>
-                <TabPane tabId="2">
-                  <Row>
-                    <Col sm="12">
-                      <Card body>
-                        <CardTitle>Second Workflow</CardTitle>
-                      </Card>
-                    </Col>
-                  </Row>
-                </TabPane>
-              </TabContent>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+        <Col md={12} xl={12}>
+          <Card title="Results">
+            <Card.Header>
+              <Card.Title as="h5">Results Pane</Card.Title>
+            </Card.Header>
+            <Card.Body bsPrefix="card-body pa-0">
+              {this.renderPreview(this.state)}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     );
   }
+
+  // _render() {
+  //   return (
+  //     <Container className="mt--5" fluid>
+  //       <Row>
+  //         <Col className="mb-5 mb-xl-0" xl="12">
+  //           <Card className=" shadow">
+  //             <Nav className="" tabs>
+  //               <NavItem>
+  //                 <NavLink
+  //                   className={classnames({
+  //                     active: this.state.activeTab === "1",
+  //                   })}
+  //                   onClick={() => {
+  //                     this.toggleWorkflow("1");
+  //                   }}
+  //                 >
+  //                   Pandas Workflow.fly*
+  //                 </NavLink>
+  //               </NavItem>
+  //               <NavItem>
+  //                 <NavLink
+  //                   className={classnames({
+  //                     active: this.state.activeTab === "2",
+  //                   })}
+  //                   onClick={() => {
+  //                     this.toggleWorkflow("2");
+  //                   }}
+  //                 >
+  //                   Workflow2.fly
+  //                 </NavLink>
+  //               </NavItem>
+  //             </Nav>
+  //             <TabContent activeTab={this.state.activeTab}>
+  //               <TabPane tabId="1">
+  //                 <Row>
+  //                   <Col className="mb-5 mb-xl-0 pr-md-0" xl="8">
+  //                     <Card>
+  //                       <CardHeader className="bg-transparent pt-2 pb-2">
+  //                         <Row className="align-items-center">
+  //                           <div className="col">
+  //                             <h3 className="text-uppercase text-light ls-1 mb-1">
+  //                               My Workspace
+  //                             </h3>
+  //                             {/* <Button onClick={() => this.props.app.getDiagramEngine().zoomToFit()}>Zoom to fit</Button> */}
+  //                           </div>
+  //                           <div className="col">
+  //                             <Button
+  //                               className="float-right"
+  //                               color="danger"
+  //                               onClick={(e) => this.runWorkflow(e, "save")}
+  //                               size="sm"
+  //                             >
+  //                               Save
+  //                             </Button>
+  //                           </div>
+  //                           <div className="col">
+  //                             <Button
+  //                               className="float-right"
+  //                               color={
+  //                                 this.state.runningState == "run"
+  //                                   ? "success"
+  //                                   : "danger"
+  //                               }
+  //                               onClick={(e) => this.runWorkflow(e, "execute")}
+  //                               size="sm"
+  //                             >
+  //                               {this.state.runningState == "run"
+  //                                 ? "Run"
+  //                                 : "Running"}
+  //                             </Button>
+  //                           </div>
+  //                         </Row>
+  //                       </CardHeader>
+  //                       <CardHeader className="bg-transparent pt-0 pb-0">
+  //                         <Row className="align-items-left">
+  //                           <div className="col">
+  //                             <TrayWidget>
+  //                               <TrayItemWidget
+  //                                 model={{ type: "File" }}
+  //                                 name="Input"
+  //                                 icon="file-alt"
+  //                                 color="#009688"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Output" }}
+  //                                 name="Output"
+  //                                 icon="file-export"
+  //                                 color="#009688"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Filter" }}
+  //                                 name="Filter"
+  //                                 icon="filter"
+  //                                 color="linear-gradient(to right, #de6262, #ffb88c"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Formula" }}
+  //                                 name="Formula"
+  //                                 icon="square-root-alt"
+  //                                 color="#02aab0"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Union" }}
+  //                                 name="Union"
+  //                                 icon="layer-group"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Unique" }}
+  //                                 name="Unique"
+  //                                 icon="code-branch"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Peek" }}
+  //                                 name="Peek"
+  //                                 icon="eye"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Select" }}
+  //                                 name="Select"
+  //                                 icon="tasks"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Sort" }}
+  //                                 name="Sort"
+  //                                 icon="sort"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Cleanup" }}
+  //                                 name="Cleanup"
+  //                                 icon="broom"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Group" }}
+  //                                 name="GroupBy"
+  //                                 icon="object-group"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Sample" }}
+  //                                 name="Sample"
+  //                                 icon="vials"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Replace" }}
+  //                                 name="Replace"
+  //                                 icon="search"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "TextToColumn" }}
+  //                                 name="TextToColumn"
+  //                                 icon="columns"
+  //                                 color="#7b4397"
+  //                               />
+  //                               <TrayItemWidget
+  //                                 model={{ type: "Join" }}
+  //                                 name="Join"
+  //                                 icon="columns"
+  //                                 color="#7b4397"
+  //                               />
+  //                             </TrayWidget>
+  //                           </div>
+  //                         </Row>
+  //                       </CardHeader>
+  //                       <CardBody
+  //                         className="p--1"
+  //                         style={{ padding: "0.5em", borderRadius: "20px" }}
+  //                       >
+  //                         <div className="body">
+  //                           <div className="content">
+  //                             <div
+  //                               className="diagram-layer"
+  //                               onDrop={(event) => {
+  //                                 let data = JSON.parse(
+  //                                   event.dataTransfer.getData(
+  //                                     "storm-diagram-node"
+  //                                   )
+  //                                 );
+
+  //                                 let node = null;
+  //                                 switch (data.type) {
+  //                                   case "File":
+  //                                     node = new FileNodeModel();
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Filter":
+  //                                     node = new FilterNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("true");
+  //                                     node.addOutPort("false");
+  //                                     break;
+  //                                   case "Join":
+  //                                     node = new JoinNodeModel();
+  //                                     // node.addInPort("input");
+  //                                     node.addInPort("left");
+  //                                     node.addInPort("right");
+
+  //                                     node.addOutPort("ljoin");
+  //                                     node.addOutPort("ijoin");
+  //                                     node.addOutPort("rjoin");
+  //                                     break;
+  //                                   case "Formula":
+  //                                     node = new FormulaNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Union":
+  //                                     node = new UnionNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Select":
+  //                                     node = new SelectNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Sort":
+  //                                     node = new SortNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Replace":
+  //                                     node = new ReplaceNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "TextToColumn":
+  //                                     node = new TextToColumnNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+
+  //                                   case "Cleanup":
+  //                                     node = new CleanupNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Group":
+  //                                     node = new GroupNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Sample":
+  //                                     node = new SampleNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("output");
+  //                                     break;
+  //                                   case "Unique":
+  //                                     node = new UniqueNodeModel();
+  //                                     node.addInPort("input");
+  //                                     node.addOutPort("unique");
+  //                                     node.addOutPort("duplicate");
+  //                                     break;
+  //                                   case "Peek":
+  //                                     node = new PeekNodeModel();
+  //                                     node.addInPort("input");
+  //                                     break;
+  //                                   case "Output":
+  //                                     node = new OutputNodeModel();
+  //                                     node.addInPort("input");
+  //                                     break;
+  //                                 }
+  //                                 let points = this.props.app
+  //                                   .getDiagramEngine()
+  //                                   .getRelativeMousePoint(event);
+  //                                 node.x = points.x;
+  //                                 node.y = points.y;
+
+  //                                 node.properties.x = points.x;
+  //                                 node.properties.y = points.y;
+
+  //                                 let that = this;
+
+  //                                 node.addListener({
+  //                                   selectionChanged: function (e) {
+  //                                     // Do something here
+  //                                     if (e.isSelected) {
+  //                                       let selected_node = {
+  //                                         id: e.entity.id,
+  //                                         nodeType: e.entity.type,
+  //                                         properties: e.entity.properties,
+  //                                       };
+
+  //                                       e.entity.properties.x = e.entity.x;
+  //                                       e.entity.properties.y = e.entity.y;
+
+  //                                       that.setState({
+  //                                         selected_node: selected_node,
+  //                                       });
+
+  //                                       // switch(e.entity.type){
+  //                                       //     case "Formula":
+  //                                       //         break
+  //                                       //     case "Filter":
+  //                                       //         break
+  //                                       //     case "File":
+  //                                       //         break
+  //                                       //     case "Union":
+  //                                       //         break
+  //                                       // }
+  //                                     } else {
+  //                                       that.setState({
+  //                                         selected_node: null,
+  //                                       });
+  //                                     }
+  //                                   },
+  //                                   entityRemoved: function (e) {
+  //                                     // Do something here
+  //                                     console.log("nODE REMOVED");
+
+  //                                     console.log(e);
+
+  //                                     let data = that.state.nodes.filter(
+  //                                       (node) => node.id != e.entity.id
+  //                                     );
+
+  //                                     that.setState({
+  //                                       nodes: _.uniqWith(data, _.isEqual),
+  //                                       // connections: Lodash.uniq(,'stamp')
+  //                                     });
+
+  //                                     console.log(data);
+  //                                   },
+  //                                 });
+  //                                 this.props.app
+  //                                   .getDiagramEngine()
+  //                                   .getDiagramModel()
+  //                                   .addNode(node);
+  //                                 this.forceUpdate();
+  //                               }}
+  //                               onDragOver={(event) => {
+  //                                 event.preventDefault();
+  //                               }}
+  //                             >
+  //                               {/* smartRouting={true}  */}
+  //                               <DiagramWidget
+  //                                 className="srd-demo-canvas"
+  //                                 deleteKeys={[46]}
+  //                                 diagramEngine={this.props.app.getDiagramEngine()}
+  //                                 allowLooseLinks={false}
+  //                                 maxNumberPointsPerLink="0"
+  //                               />
+  //                             </div>
+  //                           </div>
+  //                         </div>
+  //                       </CardBody>
+  //                     </Card>
+  //                   </Col>
+  //                   <Col xl="4" className=" pl-md-0">
+  //                     <Card
+  //                       style={{
+  //                         height: "100%",
+  //                       }}
+  //                     >
+  //                       <CardHeader className="bg-transparent">
+  //                         <Row className="align-items-center">
+  //                           <div className="col">
+  //                             {/* <h6 className="text-uppercase text-muted ls-1 mb-1">
+  //                     Performance
+  //                   </h6> */}
+  //                             <h2 className="mb-0">
+  //                               {this.state.selected_node == null
+  //                                 ? "Workspace"
+  //                                 : this.state.selected_node.properties
+  //                                     .name}{" "}
+  //                               - Properties
+  //                             </h2>
+  //                           </div>
+  //                         </Row>
+  //                       </CardHeader>
+  //                       <CardBody>
+  //                         {/* Chart */}
+  //                         {/* <span id="coderea">{ JSON.stringify(this.state.selected_node) }</span> */}
+  //                         {this.renderProperties(this.state.selected_node)}
+  //                       </CardBody>
+  //                     </Card>
+  //                   </Col>
+  //                 </Row>
+  //                 <Row className="mt-5">
+  //                   <Col className="mb-5 mb-xl-0" xl="12">
+  //                     <Card className="shadow">
+  //                       <CardHeader className="border-0">
+  //                         <Row className="align-items-center">
+  //                           <div className="col">
+  //                             <h3 className="mb-0">Results </h3>
+  //                           </div>
+  //                           <div className="col text-right">
+  //                             {/* <Button
+  //                       color="primary"
+  //                       href="#pablo"
+  //                       onClick={e => e.preventDefault()}
+  //                       size="sm"
+  //                     >
+  //                       See all
+  //                     </Button> */}
+  //                           </div>
+  //                         </Row>
+  //                       </CardHeader>
+
+  //                       {this.renderPreview(this.state)}
+  //                     </Card>
+  //                   </Col>
+  //                 </Row>
+  //               </TabPane>
+  //               <TabPane tabId="2">
+  //                 <Row>
+  //                   <Col sm="12">
+  //                     <Card body>
+  //                       <CardTitle>Second Workflow</CardTitle>
+  //                     </Card>
+  //                   </Col>
+  //                 </Row>
+  //               </TabPane>
+  //             </TabContent>
+  //           </Card>
+  //         </Col>
+  //       </Row>
+  //     </Container>
+  //   );
+  // }
 }

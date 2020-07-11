@@ -25,4 +25,8 @@
         margin-bottom: 2px;
         cursor: pointer; }
 
+        .pa-0 {
+          padding: 5px !important
+        }
+
       
