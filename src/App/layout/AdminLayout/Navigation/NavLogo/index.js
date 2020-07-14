@@ -14,7 +14,7 @@ const navLogo = (props) => {
             <div className="navbar-brand header-logo">
                  <a href={DEMO.BLANK_LINK} className="b-brand">
                     <div>
-                    <img className="rounded-circle" style={{width: '40px'}} src={logo} alt="activity-user"/>
+                    <img className="rounded-circle" style={{width: '40px', opacity: 1, transform: "none"}} src={logo} alt="activity-user"/>
                     </div>
                     <span className="b-title">Butterfly Analytics</span>
                  </a>

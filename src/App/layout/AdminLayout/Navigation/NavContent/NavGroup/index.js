@@ -2,6 +2,8 @@ import React from 'react';
 import Aux from "../../../../../../hoc/_Aux";
 import NavCollapse from './../NavCollapse';
 import NavItem from './../NavItem';
+import NavButton from './../NavButton';
+import { Button } from "react-bootstrap";
 
 const navGroup = (props) => {
     let navItems = '';
@@ -22,7 +24,7 @@ const navGroup = (props) => {
 
     return (
         <Aux>
-            <li key={props.group.id} className="nav-item pcoded-menu-caption"><label>{props.group.title}</label></li>
+            <li key={props.group.id} className="nav-item pcoded-menu-caption"><label>{props.group.title}</label> <NavButton /></li>
             {navItems}
         </Aux>
     );

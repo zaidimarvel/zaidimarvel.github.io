@@ -52,29 +52,7 @@ class NavContent extends Component {
         );
 
         let mainContent = '';
-        if (this.props.layout === 'horizontal') {
-            let prevClass = ['sidenav-horizontal-prev'];
-            if (this.state.prevDisable) {
-                prevClass = [...prevClass, 'disabled'];
-            }
-            let nextClass = ['sidenav-horizontal-next'];
-            if (this.state.nextDisable) {
-                nextClass = [...nextClass, 'disabled'];
-            }
-
-            mainContent = (
-                <div className="navbar-content sidenav-horizontal" id="layout-sidenav">
-                    <a href={DEMO.BLANK_LINK} className={prevClass.join(' ')} onClick={this.scrollPrevHandler}><span/></a>
-                    <div id="sidenav-wrapper" className="sidenav-horizontal-wrapper">
-                        <ul id="sidenav-horizontal" className="nav pcoded-inner-navbar sidenav-inner" onMouseLeave={this.props.onNavContentLeave} style={{marginLeft: '-'+this.state.scrollWidth+'px'}}>
-                            {navItems}
-                        </ul>
-                    </div>
-                    <a href={DEMO.BLANK_LINK} className={nextClass.join(' ')} onClick={this.scrollNextHandler}><span/></a>
-                </div>
-            );
-        } else {
-            mainContent = (
+        mainContent = (
                 <div className="navbar-content datta-scroll">
                     <PerfectScrollbar>
                         <ul className="nav pcoded-inner-navbar">
@@ -83,7 +61,7 @@ class NavContent extends Component {
                     </PerfectScrollbar>
                 </div>
             );
-        }
+       
 
         return (
             <Aux>

@@ -22,11 +22,10 @@ export default {
       icon: "fa fa-folder-open",
       children: [
         {
-          id: "auth",
+          id: "workflows",
           title: "PANDA",
           type: "collapse",
           icon: "fa fa-folder-open",
-          url: "/sample-page",
           // badge: {
           //     title: 'New',
           //     type: 'label-danger'
@@ -37,16 +36,14 @@ export default {
               title: "pandas_workflow.fly",
               type: "item",
               icon: "fa fa-code-branch",
-              url: "/sample-page",
+              url: "/workflow/93232fb5-7fd7-4952-8fff-ec1c051e2997",
             },
             {
               id: "signin-1",
               title: "login_workflow.fly",
               type: "item",
               icon: "fa fa-code-branch",
-              url: "/auth/signin-1",
-              target: true,
-              breadcrumbs: false,
+              url: "/workflow/f4efd382-f164-43fc-9875-5406283f8ea8",
             },
           ],
         },
@@ -82,58 +79,58 @@ export default {
         },
       ],
     },
-    // {
-    //     id: 'ui-element',
-    //     title: 'UI ELEMENT',
-    //     type: 'group',
-    //     icon: 'icon-ui',
-    //     children: [
-    //         {
-    //             id: 'basic',
-    //             title: 'Component',
-    //             type: 'collapse',
-    //             icon: 'fa fa-box',
-    //             children: [
-    //                 {
-    //                     id: 'button',
-    //                     title: 'Button',
-    //                     type: 'item',
-    //                     url: '/basic/button'
-    //                 },
-    //                 {
-    //                     id: 'badges',
-    //                     title: 'Badges',
-    //                     type: 'item',
-    //                     url: '/basic/badges'
-    //                 },
-    //                 {
-    //                     id: 'breadcrumb-pagination',
-    //                     title: 'Breadcrumb & Pagination',
-    //                     type: 'item',
-    //                     url: '/basic/breadcrumb-paging'
-    //                 },
-    //                 {
-    //                     id: 'collapse',
-    //                     title: 'Collapse',
-    //                     type: 'item',
-    //                     url: '/basic/collapse'
-    //                 },
-    //                 {
-    //                     id: 'tabs-pills',
-    //                     title: 'Tabs & Pills',
-    //                     type: 'item',
-    //                     url: '/basic/tabs-pills'
-    //                 },
-    //                 {
-    //                     id: 'typography',
-    //                     title: 'Typography',
-    //                     type: 'item',
-    //                     url: '/basic/typography'
-    //                 }
-    //             ]
-    //         }
-    //     ]
-    // },
+    {
+        id: 'ui-element',
+        title: 'MODELS',
+        type: 'group',
+        icon: 'icon-ui',
+        children: [
+            {
+                id: 'basic',
+                title: 'Component',
+                type: 'collapse',
+                icon: 'fa fa-box',
+                children: [
+                    {
+                        id: 'button',
+                        title: 'Button',
+                        type: 'item',
+                        url: '/basic/button'
+                    },
+                    {
+                        id: 'badges',
+                        title: 'Badges',
+                        type: 'item',
+                        url: '/basic/badges'
+                    },
+                    {
+                        id: 'breadcrumb-pagination',
+                        title: 'Breadcrumb & Pagination',
+                        type: 'item',
+                        url: '/basic/breadcrumb-paging'
+                    },
+                    {
+                        id: 'collapse',
+                        title: 'Collapse',
+                        type: 'item',
+                        url: '/basic/collapse'
+                    },
+                    {
+                        id: 'tabs-pills',
+                        title: 'Tabs & Pills',
+                        type: 'item',
+                        url: '/basic/tabs-pills'
+                    },
+                    {
+                        id: 'typography',
+                        title: 'Typography',
+                        type: 'item',
+                        url: '/basic/typography'
+                    }
+                ]
+            }
+        ]
+    },
     // {
     //     id: 'ui-forms',
     //     title: 'Forms & Tables',

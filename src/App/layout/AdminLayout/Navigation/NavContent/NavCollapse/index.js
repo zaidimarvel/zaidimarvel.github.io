@@ -79,6 +79,7 @@ class NavCollapse extends Component {
                 </ul>
             </Aux>
         );
+        
         let mainContent = '';
         if (this.props.layout === 'horizontal') {
             mainContent = (

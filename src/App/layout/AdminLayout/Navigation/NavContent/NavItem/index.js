@@ -14,7 +14,7 @@ class NavItem extends Component {
     render() {
         let itemTitle = this.props.item.title;
         if (this.props.item.icon) {
-            itemTitle = <span className="pcoded-mtext">{this.props.item.title}</span>;
+            itemTitle = <span className="pcoded-mtext">{this.props.item.title} </span>;
         }
 
         let itemTarget = '';
@@ -35,17 +35,13 @@ class NavItem extends Component {
             subContent = (
                 <NavLink to={this.props.item.url} className="nav-link" exact={true} target={itemTarget}>
                     <NavIcon items={this.props.item}/>
-                    {itemTitle}
+                    {itemTitle} 
                     <NavBadge layout={this.props.layout} items={this.props.item}/>
                 </NavLink>
             );
         }
         let mainContent = '';
-        if (this.props.layout === 'horizontal') {
-            mainContent = (
-                <li onClick={this.props.onItemLeave}>{subContent}</li>
-            );
-        } else {
+       
             if (this.props.windowWidth < 992) {
                 mainContent = (
                     <li className={this.props.item.classes} onClick={this.props.onItemClick}>{subContent}</li>
@@ -54,8 +50,8 @@ class NavItem extends Component {
                 mainContent = (
                     <li className={this.props.item.classes}>{subContent}</li>
                 );
-            }
-        }
+     }
+        
 
         return (
             <Aux>
