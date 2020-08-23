@@ -25,6 +25,7 @@ const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
 
 const Workflow = React.lazy(() => import('./Workflow/BodyWidget'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
+const ContentType = React.lazy(() => import('./Workflow/Models/ContentType'));
 
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
@@ -39,6 +40,7 @@ const routes = [
     { path: '/charts/nvd3', exact: true, name: 'Nvd3 Chart', component: Nvd3Chart },
     { path: '/maps/google-map', exact: true, name: 'Google Map', component: GoogleMap },
     { path: '/workflow/:id', exact: true, name: 'Workflows', component: Workflow },
+    { path: '/models/:model', exact: true, name: 'models', component: ContentType },
     { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
 ];
 

@@ -28,6 +28,10 @@ class AdminLayout extends Component {
         }
     }
 
+    componentDidMount(){
+     
+    }
+
     mobileOutClickHandler() {
         if (this.props.windowWidth < 992 && this.props.collapseMenu) {
             this.props.onComponentWillMount();
@@ -59,7 +63,7 @@ class AdminLayout extends Component {
             <Aux>
                 <Fullscreen enabled={this.props.isFullScreen}>
                     <Navigation />
-                    {/* <NavBar /> */}
+                    <NavBar />
                     <div className="pcoded-main-container" onClick={() => this.mobileOutClickHandler}>
                         <div className="pcoded-wrapper">
                             <div className="pcoded-content">
@@ -98,7 +102,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onFullScreenExit: () => dispatch({type: actionTypes.FULL_SCREEN_EXIT}),
-        onComponentWillMount: () => dispatch({type: actionTypes.COLLAPSE_MENU})
+        onComponentWillMount: () => dispatch({type: actionTypes.COLLAPSE_MENU}),
+        
     }
 };
 

@@ -12,7 +12,43 @@ const initialState = {
   connections: [],
   selected_node: null,
   isFetchingWorkflow: false,
-  workflow_id: 'test'
+  workflow_id: 'test',
+  showDialog: false,
+  showModel: false,
+  showCollection: false,
+  menuitems: {
+    items: [
+      {
+        id: "navigation",
+        title: "Home",
+        type: "group",
+        icon: "fa fa-home",
+        children: [
+          {
+            id: "dashboard",
+            title: "Recent",
+            type: "item",
+            url: "/dashboard/default",
+            icon: "fa fa-history",
+          },
+        ],
+      },
+      {
+        id: "pages",
+        title: "Collections",
+        type: "group",
+        icon: "fa fa-folder-open",
+        
+      },
+      {
+          id: 'ui-element',
+          title: 'Content Types',
+          type: 'group',
+          icon: 'icon-ui',
+         
+      },
+    ]
+  }
 };
 
 const reducer = (state = initialState, action) => {
@@ -75,6 +111,31 @@ const reducer = (state = initialState, action) => {
         };
       }
       return { ...state };
+
+      
+      case actionTypes.CLOSE_WORKFLOW_DIALOG:
+      return {
+        ...state,
+        showDialog: !state.showDialog,
+      };
+
+      case actionTypes.CLOSE_MODEL_DIALOG:
+        return {
+          ...state,
+          showModel: !state.showModel,
+        };
+        case actionTypes.CLOSE_COLLECTION_DIALOG:
+          return {
+            ...state,
+            showCollection: !state.showCollection,
+          };
+        
+      case actionTypes.GET_MENU_ITEMS:
+      return {
+        ...state,
+        menuitems: action.items,
+      };
+
     case actionTypes.FULL_SCREEN:
       return {
         ...state,

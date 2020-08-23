@@ -9,7 +9,7 @@ import * as actionTypes from "../../../../store/actions";
 
 class NavBar extends Component {
     render() {
-        let headerClass = ['navbar', 'pcoded-header', 'navbar-expand-lg', this.props.headerBackColor];
+        let headerClass = ['navbar', 'pcoded-header', 'bg-dark', ' text-white', 'navbar-expand-lg', this.props.headerBackColor];
         if (this.props.headerFixedLayout) {
             headerClass = [...headerClass, 'headerpos-fixed'];
         }

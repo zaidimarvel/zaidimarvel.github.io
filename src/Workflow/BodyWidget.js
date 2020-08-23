@@ -116,7 +116,7 @@ export class BodyWidget extends React.Component {
     this.props.onLoadWorkflow(this.props.match.params.id);
 
     Axios.get(
-      `http://127.0.0.1:5000/get-workflow?_id=${this.props.match.params.id}`
+      `http://localhost:5000/get-workflow?_id=${this.props.match.params.id}`
     )
       .then((response) => {
         that.props.onChangeSelectedNode(null);
@@ -620,7 +620,7 @@ export class BodyWidget extends React.Component {
       ...node.properties,
     };
 
-    Axios.post("http://127.0.0.1:5000/inputconfigs", payload)
+    Axios.post("http://localhost:5000/inputconfigs", payload)
       .then((response) => {
         console.log(response.data);
 
@@ -735,7 +735,7 @@ export class BodyWidget extends React.Component {
       if (action == "execute") {
         this.setState({ runningState: "running" });
 
-        Axios.post("http://127.0.0.1:5000/execute", payload)
+        Axios.post("http://localhost:5000/execute", payload)
           .then((response) => {
             console.log(response.data);
             let payloadData = response.data;
@@ -757,7 +757,7 @@ export class BodyWidget extends React.Component {
         this.appEngine.diagramEngine.repaintCanvas();
       }
       if (action == "save") {
-        Axios.post("http://127.0.0.1:5000/save-workflow", payload)
+        Axios.post("http://localhost:5000/save-workflow", payload)
           .then((response) => {
             console.log(response.data);
           })

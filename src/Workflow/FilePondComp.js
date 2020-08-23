@@ -97,7 +97,7 @@ class FilePondComp extends React.Component {
             // allowMultiple={true}
             server={
               {
-                      url: 'http://127.0.0.1:5000',
+                      url: 'http://localhost:5000',
                       process: {
                           url: '/upload',
                           method: 'POST',

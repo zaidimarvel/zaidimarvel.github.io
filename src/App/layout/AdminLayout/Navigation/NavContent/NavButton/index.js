@@ -1,13 +1,14 @@
 import React from 'react';
+import { Row, Col, Card, Table, Tabs, Button, Modal } from "react-bootstrap";
 
 const navButton = (props) => {
     let navButtons = false;
     const ButtonClass = ['label', 'pcoded-Button'];
 
     navButtons = (
-        <span className={ButtonClass.join(' ')}>
+        <Button onClick={props.onHide} className={ButtonClass.join(' ')}>
             +
-        </span>
+        </Button>
     );
   
     return navButtons;

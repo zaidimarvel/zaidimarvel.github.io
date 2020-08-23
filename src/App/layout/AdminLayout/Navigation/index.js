@@ -8,7 +8,7 @@ import NavContent from './NavContent';
 import OutsideClick from './OutsideClick';
 import Aux from './../../../../hoc/_Aux'
 import * as actionTypes from './../../../../store/actions';
-import navigation from '../../../../menu-items';
+// import navigation from '../../../../menu-items';
 
 class Navigation extends Component {
 
@@ -20,9 +20,124 @@ class Navigation extends Component {
     //     }
     // };
 
-    componentDidMount() {
+    componentWillMount() {
         // this.resize();
         // window.addEventListener('resize', this.resize)
+           // TODO
+        //Fetch menu items - Collections and models
+        let items =  {
+            items: [
+              {
+                id: "navigation",
+                title: "Home",
+                type: "group",
+                icon: "fa fa-home",
+                children: [
+                  {
+                    id: "dashboard",
+                    title: "Recent",
+                    type: "item",
+                    url: "/dashboard/default",
+                    icon: "fa fa-history",
+                  },
+                ],
+              },
+              {
+                id: "pages",
+                title: "Collections",
+                type: "group",
+                icon: "fa fa-folder-open",
+                children: [
+                  {
+                    id: "workflows",
+                    title: "PANDA",
+                    type: "collapse",
+                    icon: "fa fa-folder-open",
+                    // badge: {
+                    //     title: 'New',
+                    //     type: 'label-danger'
+                    // },
+                    children: [
+                      {
+                        id: "signup-1",
+                        title: "pandas_workflow.fly",
+                        type: "item",
+                        icon: "fa fa-code-branch",
+                        url: "/workflow/93232fb5-7fd7-4952-8fff-ec1c051e2997",
+                      },
+                      {
+                        id: "signin-1",
+                        title: "login_workflow.fly",
+                        type: "item",
+                        icon: "fa fa-code-branch",
+                        url: "/workflow/f4efd382-f164-43fc-9875-5406283f8ea8",
+                      },
+                    ],
+                  },
+                  {
+                    id: "pos",
+                    title: "ZAIDI POS Products",
+                    type: "collapse",
+                    icon: "fa fa-folder-open",
+                    // badge: {
+                    //     title: 'New',
+                    //     type: 'label-danger'
+                    // },
+                    children: [
+                      {
+                        id: "signup-1",
+                        title: "Sign up",
+                        type: "item",
+                        url: "/auth/signup-1",
+                        target: true,
+                        icon: "fa fa-code-branch",
+                        breadcrumbs: false,
+                      },
+                      {
+                        id: "signin-1",
+                        title: "Sign in",
+                        type: "item",
+                        url: "/auth/signin-1",
+                        icon: "fa fa-code-branch",
+                        target: true,
+                        breadcrumbs: false,
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                  id: 'ui-element',
+                  title: 'Content Types',
+                  type: 'group',
+                  icon: 'icon-ui',
+                  children: [
+                    {
+                      id: "user",
+                      title: "Users",
+                      type: "item",
+                      url: "/models/user",
+                      icon: "fa fa-user",
+                    },
+                    {
+                        id: "customer",
+                        title: "Customer",
+                        type: "item",
+                        url: "/models/customer",
+                        icon: "fa fa-user",
+                      },
+                  ]
+              },
+            
+            ],
+          };
+
+          console.log("AM HERE YAAL");
+          
+          this.props.onGetNavigatorItems(items);
+
+          this.forceUpdate()
+
     }
 
     componentWillUnmount() {
@@ -108,19 +223,30 @@ class Navigation extends Component {
         let navContent = (
             <div className="navbar-wrapper">
                 <NavLogo collapseMenu={this.props.collapseMenu} windowWidth={this.props.windowWidth} onToggleNavigation={this.props.onToggleNavigation} />
-                <NavContent navigation={navigation.items} />
             </div>
         );
-        if (this.props.windowWidth < 992) {
+        console.log("NAV RIGHT");
+        console.log(this.props.menuitems );
+        if (this.props.menuitems !== null){
+
             navContent = (
-                <OutsideClick>
-                    <div className="navbar-wrapper">
-                        <NavLogo collapseMenu={this.props.collapseMenu} windowWidth={this.props.windowWidth} onToggleNavigation={this.props.onToggleNavigation} />
-                        <NavContent navigation={navigation.items} />
-                    </div>
-                </OutsideClick>
+                <div className="navbar-wrapper">
+                    <NavLogo collapseMenu={this.props.collapseMenu} windowWidth={this.props.windowWidth} onToggleNavigation={this.props.onToggleNavigation} />
+                    <NavContent navigation={this.props.menuitems.items} />
+                </div>
             );
+            if (this.props.windowWidth < 992) {
+                navContent = (
+                    <OutsideClick>
+                        <div className="navbar-wrapper">
+                            <NavLogo collapseMenu={this.props.collapseMenu} windowWidth={this.props.windowWidth} onToggleNavigation={this.props.onToggleNavigation} />
+                            <NavContent navigation={this.props.menuitems.items} />
+                        </div>
+                    </OutsideClick>
+                );
+            }
         }
+       
 
         return (
             <Aux>
@@ -151,7 +277,8 @@ const mapStateToProps = state => {
         navListIcon: state.navListIcon,
         navActiveListColor: state.navActiveListColor,
         navListTitleColor: state.navListTitleColor,
-        navListTitleHide: state.navListTitleHide
+        navListTitleHide: state.navListTitleHide,
+        menuitems: state.menuitems
     }
 };
 
@@ -159,6 +286,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onToggleNavigation: () => dispatch({type: actionTypes.COLLAPSE_MENU}),
         onChangeLayout: (layout) => dispatch({type: actionTypes.CHANGE_LAYOUT, layout: layout}),
+        onGetNavigatorItems: (items) => dispatch({type: actionTypes.GET_MENU_ITEMS, items: items})
     }
 };
 

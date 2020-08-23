@@ -1,5 +1,5 @@
 export default {
-    defaultPath: '/dashboard/default',
+    defaultPath: '/workflow/93232fb5-7fd7-4952-8fff-ec1c051e2997',
     basename: '/butterfly', // only at build time to set, like /datta-able
     layout: 'vertical', // vertical, horizontal (not available in lite version)
     preLayout: null, // (not available in lite version)
