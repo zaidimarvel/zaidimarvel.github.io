@@ -16,6 +16,9 @@ const initialState = {
   showDialog: false,
   showModel: false,
   showCollection: false,
+  currentEntity: {
+    title: ''
+  },
   menuitems: {
     items: [
       {
@@ -38,11 +41,10 @@ const initialState = {
         title: "Collections",
         type: "group",
         icon: "fa fa-folder-open",
-        
       },
       {
           id: 'ui-element',
-          title: 'Content Types',
+          title: 'Entity',
           type: 'group',
           icon: 'icon-ui',
          
@@ -169,6 +171,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         display_results: action.results,
+      };
+
+      case actionTypes.SAVE_ENTITY:
+    //   console.log("Saving Results");
+      return {
+        ...state,
+        currentEntity: action.entity,
       };
 
     case actionTypes.CHANGE_SELECTED:

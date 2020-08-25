@@ -9,8 +9,8 @@ import NavGroup from "./NavGroup";
 import DEMO from "../../../../../store/constant";
 
 import * as actionTypes from "../../../../../store/actions";
-import { WorkflowModal } from "./Modal";
-import { ModelModel } from "./ModelModel";
+import { WorkflowModal } from "./WorkflowModal";
+import ModelModel from "./ModelModel";
 import { CollectionModal } from "./CollectionModal";
 
 class NavContent extends Component {
@@ -30,7 +30,23 @@ class NavContent extends Component {
       this.setState({ scrollWidth: scrollWidth, prevDisable: false });
     }
   };
+  addNewCollection= () => {
 
+    // e.preventDefault();
+     console.log("added new COLLECTION");
+ 
+    // this.forceUpdate();
+   };
+
+  addNewWorkflow= () => {
+
+   // e.preventDefault();
+    console.log("added new worklflow");
+
+   // this.forceUpdate();
+  };
+
+  
   scrollNextHandler = () => {
     const wrapperWidth = document.getElementById("sidenav-wrapper").clientWidth;
     const contentWidth = document.getElementById("sidenav-horizontal")
@@ -74,9 +90,9 @@ class NavContent extends Component {
       <Aux>
         {mainContent}
 
-        <WorkflowModal show={this.props.showDialog} onHide={() => this.props.onWorkflowClose()}/>
+        <WorkflowModal show={this.props.showDialog} onSaveWorkflow={() => this.addNewWorkflow()} onHide={() => this.props.onWorkflowClose()}/>
         <ModelModel show={this.props.showModel} onHide={() => this.props.onModelDialogClose()}/>
-        <CollectionModal show={this.props.showCollection} onHide={() => this.props.onCollectionDialogClose()}/>
+        <CollectionModal show={this.props.showCollection}  onSaveCollection={() => this.addNewCollection()} onHide={() => this.props.onCollectionDialogClose()}/>
       </Aux>
     );
   }
@@ -98,6 +114,8 @@ const mapDispatchToProps = (dispatch) => {
     onWorkflowClose: () => dispatch({ type: actionTypes.CLOSE_WORKFLOW_DIALOG }),
     onModelDialogClose: () => dispatch({ type: actionTypes.CLOSE_MODEL_DIALOG }),
     onCollectionDialogClose: () => dispatch({ type: actionTypes.CLOSE_COLLECTION_DIALOG }),
+    onGetItems: (items) =>
+    dispatch({ type: actionTypes.GET_MENU_ITEMS, items: items })
   };
 };
 

@@ -14,6 +14,7 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import NavIcon from "./NavIcon";
+import Axios from "axios";
 
 export class CollectionModal extends React.Component {
   constructor(props) {
@@ -21,14 +22,38 @@ export class CollectionModal extends React.Component {
     this.state = {
       // Set initial files, type 'local' means this is a file
       // that has already been uploaded to the server (see docs)
-      show: false,
+      collection_name: '',
+      project_id: 1,
+      company_id: 1
     };
+    this.handleCollectionChanged = this.handleCollectionChanged.bind(this)
+
   }
+
+  handleCollectionChanged(event) {
+    this.setState({collection_name: event.target.value})
+  }
+
+  onSaveCollection = () => {
+    let that = this
+    
+    Axios.post("http://localhost:5000/save-collection", this.state)
+    .then((response) => {
+
+      that.props.onHide()
+      
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+    // this.forceUpdate();
+   };
 
   render() {
     return (
       <Modal
-        {...this.props}
+      show={this.props.show}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -45,8 +70,8 @@ export class CollectionModal extends React.Component {
           <Row>
             <Col md={12}>
               <Form.Group controlId="exampleForm.ControlInput1">
-                <Form.Label>collection name</Form.Label>
-                <Form.Control type="text" placeholder="workflow name" />
+                <Form.Label>Collection name</Form.Label>
+                <Form.Control type="text" onChange={this.handleCollectionChanged}  placeholder="Collection name" />
               </Form.Group>
             </Col>
             
@@ -54,9 +79,11 @@ export class CollectionModal extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.onHide}>Close</Button>
-          <Button onClick={this.props.onHide}>Save</Button>
+          <Button disabled={this.state.collection_name === ''} onClick={() => this.onSaveCollection()}>Save</Button>
         </Modal.Footer>
       </Modal>
     );
   }
 }
+
+

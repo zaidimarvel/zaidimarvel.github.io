@@ -23,7 +23,7 @@ class NavRight extends Component {
             <i className="fa fa-plus-square"></i> Workflow
           </li>
           <li onClick={() => this.props.onModelDialogClose()}>
-            <i className="fa fa-plus-square"></i> Content Type
+            <i className="fa fa-plus-square"></i> Entity
           </li>
         </ul>
       </Aux>

@@ -11,14 +11,18 @@ class RowsTable extends React.Component {
         var data = [
             ['sb', 'Michael', "mike@zmc.co.ke", "+25412342121",'#passw0rd']
         ];
+
         this.options = {
         data:data,
+        defaultColWidth: 180,
+        tableOverflow: true,
+        tableWidth: "1100px",
         columns: [
-            { type: 'text', title:'Username', width:120 },
-            { type: 'text', title:'Firstname', width:200},
-            { type: 'text', title:'Email', width:120 },
-            { type: 'text', title:'Phone', width:120 },
-            { type: 'text', title:'password', width:120 },
+            { type: 'text', title:'Username'},
+            { type: 'text', title:'Firstname'},
+            { type: 'text', title:'Email'},
+            { type: 'text', title:'Phone'},
+            { type: 'text', title:'password'},
          ],
         onchange: this.changed,
         columnDrag:true,
@@ -59,13 +63,14 @@ class RowsTable extends React.Component {
 
     componentDidMount = function() {
         this.el = jexcel(ReactDOM.findDOMNode(this).children[0], this.options);
-
     }
 
     addRow = function() {
         this.el.insertRow([ '', '', '', '','']);
        console.log( this.el.getRowData(0));
     }
+
+    
     saveFields = function() {
         
        console.log( this.el.getData());
@@ -91,6 +96,8 @@ class RowsTable extends React.Component {
 
                 <div>
                 <input type='button' value='Add new Row' onClick={() => this.addRow()}></input>
+                <input type='button' value='Save Rows' onClick={() => this.saveFields()}></input>
+
                 </div>
                 
             </div>

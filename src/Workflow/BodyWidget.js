@@ -727,6 +727,8 @@ export class BodyWidget extends React.Component {
       let payload = {
         name: "pandas_workflow.fly",
         _id: this.props.match.params.id,
+        col_id: '5f457068a5a7edd86c38af0b',
+        collection_name: 'Default',
         description: "Hello world",
         links: payloadConnections,
         nodes: payloadNode,
@@ -757,6 +759,7 @@ export class BodyWidget extends React.Component {
         this.appEngine.diagramEngine.repaintCanvas();
       }
       if (action == "save") {
+        
         Axios.post("http://localhost:5000/save-workflow", payload)
           .then((response) => {
             console.log(response.data);
